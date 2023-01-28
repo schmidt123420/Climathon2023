@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_mail import Mail, Message
 import flask_login
+import json
 
 app = Flask("Climathon 2023 Thing") #create app object
 app.secret_key = 'secrety secret'
@@ -12,12 +13,9 @@ login_manager.login_view = "login.html"
 
 #Dictionary to model stored users
 users = {
-    'bob@gmail.com':{'password':'bob123', 'age':'elder', 'asthma':True, 'heart/lung':True, 'pregnant':False, 'zip code':43202, 'outdoor activity':1},
-    'sarah@gmail.com':{'password':'sarah123', 'age':'adult', 'asthma':False, 'heart/lung':False, 'pregnant':True, 'zip code':43210, 'outdoor activity':3}
+    'bob@gmail.com':{'password':'bob123', 'name':'Bob Jones', 'age':'elder', 'asthma':True, 'heart/lung':True, 'pregnant':False, 'zip code':43202, 'outdoor activity':1},
+    'sarah@gmail.com':{'password':'sarah123', 'name':'Sarah Boat', 'age':'adult', 'asthma':False, 'heart/lung':False, 'pregnant':True, 'zip code':43210, 'outdoor activity':3}
     }
-
-#bad practice but it's 3:34am and I'm tired so global variable here we go
-currEmail = ""
 
 #Define User object
 class User(flask_login.UserMixin):
@@ -65,9 +63,10 @@ def home():
 @app.route('/welcome')
 def welcome():
     #render a template
-    email = currEmail
-    print(f"\n\ncurrEmail: {currEmail}")
-    return render_template('welcome.html', email=email)
+    # email = currEmail
+    print(f"\n\ncurrEmail in WELCOME: {currEmail}")
+    print(f"Users: {users}")
+    return render_template('welcome.html', email=currEmail, users=users)
 
 @app.route('/info')
 def info():
@@ -121,8 +120,10 @@ def login():
         print(f"EMAIL: {email}")
         currEmail = email #bad practice
         print(f"CURR EMAIL: {currEmail}")
+        print(f"USERS: {users}")
         flask_login.login_user(user)
-        return redirect(url_for('welcome'))
+        # return redirect(url_for('welcome'))
+        return render_template("welcome.html", email=currEmail, users=users)
     # return 'Incorrect Email/Password'
     elif email not in users.keys():
         return render_template("login.html", feedback="Invalid Email")
@@ -152,4 +153,6 @@ def unauthorized_handler():
 
 
 if __name__ == '__main__':
+    #bad practice but it's 3:34am and I'm tired so global variable here we go
+    currEmail = ""
     app.run(debug = True)
