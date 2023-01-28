@@ -64,9 +64,15 @@ def home():
 def welcome():
     #render a template
     # email = currEmail
-    print(f"\n\ncurrEmail in WELCOME: {currEmail}")
-    print(f"Users: {users}")
-    return render_template('welcome.html', email=currEmail, users=users)
+    # print(f"\n\ncurrEmail in WELCOME: {currEmail}")
+    # print(f"Users: {users}")
+
+    #Retrieve current user info in currUser.json
+    filename = "currUser.json"
+    with open(filename, 'r') as f:
+        email = json.load(f)
+    
+    return render_template('welcome.html', email=email['email'], users=users)
 
 @app.route('/info')
 def info():
@@ -81,39 +87,17 @@ def data():
 #Route for the user login page
 @app.route('/form_login', methods=['GET', 'POST'])
 def login():
-    # error = None
-    # if request.method == 'POST':
-    #     if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-    #         error = 'Invalid credentials, try again'
-    #     else:
-    #         #successfully logged in
-    #         session['is_logged_in'] = True
-    #         return redirect(url_for('home'))
-    # return render_template('login.html', error=error)
-
-    #testing something
-    # email = request.form['email']
-    # password = request.form['password']
-    # if email not in users.keys():
-    #     return render_template("login.html", feedback="Invalid Email/")
-    # elif users[email]["password"] != password:
-    #     return render_template("login.html", feedback="Invalid Password/")
-    # else:
-    #     return render_template("welcome.html")
-
-
-
     if request.method == 'GET':
         return render_template("login.html", feedback="")
-            #  return '''
-            #    <form action='login' method='POST'>
-            #     <input type='text' name='email' id='email' placeholder='email'/>
-            #     <input type='password' name='password' id='password' placeholder='password'/>
-            #     <input type='submit' name='submit'/>
-            #    </form>
-            #    '''
     email = request.form['email']
     password = request.form['password']
+
+    #Store current user info in currUser.json
+    currUser = {'email':email} #data to be stored
+    filename = "currUser.json"
+    with open(filename, 'w') as f:
+        json.dump(currUser, f)
+
     if email in users.keys() and password == users[email]['password']:
         user = User()
         user.id = email
@@ -153,6 +137,6 @@ def unauthorized_handler():
 
 
 if __name__ == '__main__':
-    #bad practice but it's 3:34am and I'm tired so global variable here we go
-    currEmail = ""
+    # #bad practice but it's 3:34am and I'm tired so global variable here we go
+    # currEmail = ""
     app.run(debug = True)
