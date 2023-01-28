@@ -2,6 +2,8 @@ from flask import Flask, render_template, redirect, url_for, request
 from flask_mail import Mail, Message
 import flask_login
 import json
+import purple_air_control as purple
+from calculations import processUserData
 
 app = Flask("Climathon 2023 Thing") #create app object
 app.secret_key = 'secrety secret'
@@ -99,6 +101,8 @@ def login():
         json.dump(currUser, f)
 
     if email in users.keys() and password == users[email]['password']:
+        processUserData(email)
+        print("PROCESSING USER DATA!!!")
         user = User()
         user.id = email
         print(f"EMAIL: {email}")
@@ -137,6 +141,4 @@ def unauthorized_handler():
 
 
 if __name__ == '__main__':
-    # #bad practice but it's 3:34am and I'm tired so global variable here we go
-    # currEmail = ""
     app.run(debug = True)
