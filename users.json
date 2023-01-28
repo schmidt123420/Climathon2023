@@ -1,0 +1,20 @@
+{
+    "bob@gmail.com" : {
+        "password" : "password",
+        "age" : "elder",
+        "asthma" : true,
+        "heart/lung" : true,
+        "pregnant" : false,
+        "zip code" : 43202,
+        "outdoor activity level" : 1
+    },
+    "sarah@gmail.com" : {
+        "password" : "password",
+        "age" : "adult",
+        "asthma" : false,
+        "heart/lung" : false,
+        "pregnant" : true,
+        "zip code" : 43210,
+        "outdoor activity level" : 3
+    }
+}
