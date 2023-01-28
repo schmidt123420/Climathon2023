@@ -79,9 +79,39 @@ body {
 </div>
 
 <div style="padding-left:16px">
-  <h2>Hi {{email}}</h2>
-  <h2>Stuff stuff stuff</h2>
-  <p>How much wood could a woodchuck chuck if a woodchuck could chuck wood</p>
+  <h2>Hi {{users[email]['name']}}!</h2>
+  <p>
+    <table>
+      <tr>
+        <th>Criteria</th>
+        <th>Your Value</th>
+      </tr>
+      <tr>
+        <td>Age</td>
+        <td>{{users[email]['age'].title()}}</td>
+      </tr>
+      <tr>
+        <td>Do you have Asthma?</td>
+        <td>{{users[email]['asthma']}}</td>
+      </tr>
+      <tr>
+        <td>Do you have heart or lung disease?</td>
+        <td>{{users[email]['heart/lung']}}</td>
+      </tr>
+      <tr>
+        <td>Are you pregnant?</td>
+        <td>{{users[email]['pregnant']}}</td>
+      </tr>
+      <tr>
+        <td>Level of outdoor activity on a scale of 1-5</td>
+        <td>{{users[email]['outdoor activity']}}</td>
+      </tr>
+      <tr>
+        <td>Zip Code</td>
+        <td>{{users[email]['zip code']}}</td>
+      </tr>
+    </table>
+  </p>
 </div>
 
 </body>
