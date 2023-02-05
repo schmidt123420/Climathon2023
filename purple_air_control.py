@@ -19,6 +19,7 @@ class Sensor:
     def __init__(self, zipcode):
         self.zipcode = zipcode
         self.sensorIndex = findClosestSensor(zipcode)
+        self.sensorIndex = 0
         self.latitude = 0 
         self.longitude = 0
         self.altitude = 0

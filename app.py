@@ -4,6 +4,7 @@ import flask_login
 import json
 import purple_air_control as purple
 from calculations import processUserData
+from emailcontrol import email_control
 
 app = Flask("Climathon 2023 Thing") #create app object
 app.secret_key = 'secrety secret'
@@ -15,7 +16,7 @@ login_manager.login_view = "login.html"
 
 #Dictionary to model stored users
 users = {
-    'bob@gmail.com':{'password':'bob123', 'name':'Bob Jones', 'age':'elder', 'asthma':True, 'heart/lung':True, 'pregnant':False, 'zip code':43202, 'outdoor activity':1},
+    'schmidt.1234@osu.edu':{'password':'bob123', 'name':'Bob Jones', 'age':'elder', 'asthma':True, 'heart/lung':True, 'pregnant':False, 'zip code':43202, 'outdoor activity':1},
     'sarah@gmail.com':{'password':'sarah123', 'name':'Sarah Boat', 'age':'adult', 'asthma':False, 'heart/lung':False, 'pregnant':True, 'zip code':43210, 'outdoor activity':3}
     }
 
@@ -46,44 +47,37 @@ def request_loader(request):
 
 
 #configuration for email address to send email from
-# app.config['MAIL_SERVER']='smtp.gmail.com'
-# app.config['MAIL_PORT'] = 465
-# app.config['MAIL_USERNAME'] = 'climathon2023@gmail.com'
-# app.config['MAIL_PASSWORD'] = 'xacevjjzpiqprdkn'
-# app.config['MAIL_USE_TLS'] = False
-# app.config['MAIL_USE_SSL'] = True
-# mail = Mail(app)
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'climathon2023@gmail.com'
+app.config['MAIL_PASSWORD'] = 'xacevjjzpiqprdkn'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 @app.route("/")
 def home():
-    # message = Message('Hello darkness my old friend', sender = 'climathon2023@gmail.com', recipients = ['schmidt.1234@osu.edu'])
-    # message.body = "Testing 1 2 3 Does this work?"
-    # mail.send(message)
-    # return "Sent ze message"
     return render_template("login.html")
 
 @app.route('/welcome')
 def welcome():
-    #render a template
-    # email = currEmail
-    # print(f"\n\ncurrEmail in WELCOME: {currEmail}")
-    # print(f"Users: {users}")
-
     #Retrieve current user info in currUser.json
     filename = "currUser.json"
     with open(filename, 'r') as f:
         email = json.load(f)
-    
+    email_control(mail)
     return render_template('welcome.html', email=email['email'], users=users)
 
 @app.route('/info')
 def info():
     #render a template
+    email_control(mail)
     return render_template('info.html')
 
 @app.route('/data')
 def data():
     #render a template
+    email_control(mail)
     return render_template('data.html')
 
 #Route for the user login page
@@ -102,6 +96,7 @@ def login():
 
     if email in users.keys() and password == users[email]['password']:
         processUserData(email)
+        email_control(mail)
         print("PROCESSING USER DATA!!!")
         user = User()
         user.id = email
